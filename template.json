@@ -12,9 +12,9 @@
         "properties": {
           "containers": [
             {
-              "name": "nanoserver-iis ",
+              "name": "nanoserveriis",
               "properties": {
-                "image": "nanoserver/iis ",
+                "image": "nanoserver/iis",
                 "resources": {
                   "requests": {
                     "cpu": 0.5,

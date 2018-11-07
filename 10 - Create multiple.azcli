@@ -1,5 +1,5 @@
-az account list
-az account set --subscription a83583c4-ea6d-4564-8906-7f646301a498
-az group list
+# az account list
+# az account set --subscription a83583c4-ea6d-4564-8906-7f646301a498
+# az group list
 
 az group deployment create --template-file template.json --resource-group Docker
