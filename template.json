@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+    },
+    "resources": [
+      {
+        "name": "Docker",
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2018-04-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "containers": [
+            {
+              "name": "nanoserveriis",
+              "properties": {
+                "image": "nanoserver/iis",
+                "resources": {
+                  "requests": {
+                    "cpu": 0.5,
+                    "memoryInGB": 0.5
+                    }
+                },
+                "ports": [
+                  {
+                    "port": 8080
+                  }
+                ]
+              }
+            },
+            {
+              "name": "SqlOnLinux",
+              "properties": {
+                "image": "frankgeisler/mssql-server-linux-adventureworksdw2017",
+                "resources": {
+                  "requests": {
+                    "cpu": 3,
+                    "memoryInGB": 4
+                    }
+                },
+                "ports": [
+                    {
+                        "port": 1433
+                    }
+                ]
+              }
+            }
+          ],
+          "osType": "Linux",
+          "ipAddress": {
+            "type": "Public",
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 8080
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "containerIPv4Address": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', 'helloContainerGroup')).ipAddress.ip]"
+      }
+    }
+  }
