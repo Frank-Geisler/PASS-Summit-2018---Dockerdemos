@@ -1,3 +1,27 @@
+#============================================================================
+#	File:		08 - Azure Container Group.ps1
+#
+#	Summary:	This script demonstrates how to create an Azure Container 
+#               Instance
+#
+#	Datum:		2018-11-06
+#
+#	PowerShell Version: 5.1
+#------------------------------------------------------------------------------
+#	Written by: 
+#       Tillmann Eitelberg, oh22information services GmbH 
+#       Frank Geisler, GDS Business Intelligence GmbH
+#
+#   This script is intended only as a supplement to demos and lectures
+#   given by Tillmann Eitelberg and Frank Geisler.  
+#
+#   THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF 
+#   ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED 
+#   TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+#   PARTICULAR PURPOSE.
+#============================================================================*/
+
+
 # Login-AzureRmAccount
 # Set-AzureRmContext -SubscriptionId a83583c4-ea6d-4564-8906-7f646301a498
 
