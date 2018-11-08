@@ -20,6 +20,7 @@
 #   TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 #   PARTICULAR PURPOSE.
 #============================================================================*/
+
 docker pull microsoft/mssql-server-linux:latest
 
 #-----------------------------------------------------------------------------
