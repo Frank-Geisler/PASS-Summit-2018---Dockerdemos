@@ -1,8 +1,8 @@
 #============================================================================
-#	File:		08 - Azure Container Group.ps1
+#	File:		10 - Deployment.ps1
 #
 #	Summary:	This script demonstrates how to create an Azure Container 
-#               Instance
+#               Instance and automatically deploy a DACPAC to it
 #
 #	Datum:		2018-11-06
 #
@@ -21,30 +21,36 @@
 #   PARTICULAR PURPOSE.
 #============================================================================*/
 
+# Install-Module dbatools
+# Install-Module AzureRm.Profile
 
-# Login-AzureRmAccount
-# Set-AzureRmContext -SubscriptionId a83583c4-ea6d-4564-8906-7f646301a498
+# $rmprofile = Select-AzureRmProfile -Path "C:\temp\AzureLogin.json"
+
+# if (!$rmprofile) {
+    #Save-AzureRmProfile -Path "C:\temp\AzureLogin.json" -Force
+#}
+
+#Login-AzureRmAccount
+#Set-AzureRmContext -SubscriptionId a83583c4-ea6d-4564-8906-7f646301a498
 
 $resourceGroup = "Docker"
 $OsType = "Linux"
 $name = "sql01"
 $location = "westus"
 $envVars = @{ACCEPT_EULA="Y";SA_PASSWORD="!demo54321"}
-
-<#
-
-docker run --name sqlserverdocker -p 1433:1433 -d  frankgeisler/mssql-server-linux-adventureworks2017
-
-#>
-
+$DacpacPath = "C:\Users\Tillmann\OneDrive\Vorträge\PASS Summit 2018\PASS Database\Sample\bin\Debug\Sample.dacpac"
+$DatabaseName = "Sample"
+$PublishProfile = "C:\Users\Tillmann\OneDrive\Vorträge\PASS Summit 2018\PASS Database\Sample\Sample.publish.xml"
+$UserName = "sa"
+$Password = "!demo54321" | ConvertTo-SecureString -asPlainText -Force
 
 #-Image microsoft/mssql-server-windows-developer `
+#-Image microsoft/mssql-server-linux
 #-Image frankgeisler/mssql-server-linux-adventureworks2017
-#-Image microsoft/iis:nanoserver `
 
 New-AzureRmContainerGroup -ResourceGroupName $resourceGroup `
                             -Name $name `
-                            -Image frankgeisler/mssql-server-linux-adventureworks2017 `
+                            -Image microsoft/mssql-server-linux `
                             -OsType $OsType `
                             -DnsNameLabel "$($name)-linux" `
                             -Location $location `
@@ -55,11 +61,27 @@ New-AzureRmContainerGroup -ResourceGroupName $resourceGroup `
                             -EnvironmentVariable $envVars
 
 Write-Host (Get-Date -Format g)
-while ((Get-AzureRmContainerGroup -ResourceGroupName $resourceGroup -Name $name).ProvisioningState -eq "Creating") { }
+while ((Get-AzureRmContainerGroup -ResourceGroupName $resourceGroup -Name $name).ProvisioningState -ne "Succeeded" -and `
+        (Get-AzureRmContainerGroup -ResourceGroupName $resourceGroup -Name $name).State -ne "Running") { }
 Write-Host (Get-Date -Format g)
 
 $ipAddress = (Get-AzureRmContainerGroup -ResourceGroupName $resourceGroup -Name $name).IpAddress
-Write-Host $ipAddress
 
-#Remove-AzureRmContainerGroup -ResourceGroupName $resourceGroup -Name $name
+Start-Sleep -s 60
 
+$PublishParams = @{
+	SqlInstance = $ipAddress
+	Path = (Resolve-Path $DacpacPath)
+	Database = $DatabaseName
+	PublishXml = (Resolve-Path $PublishProfile)
+}
+
+if ($UserName) {
+	$PublishParams.Add("SqlCredential", (New-Object System.Management.Automation.PSCredential ($UserName, $Password)))
+}
+
+$dac = Publish-DbaDacPackage @PublishParams
+
+Write-Host "IP-Address: $($ipAddress)"
+
+# Remove-AzureRmContainerGroup -ResourceGroupName $resourceGroup -Name $name
