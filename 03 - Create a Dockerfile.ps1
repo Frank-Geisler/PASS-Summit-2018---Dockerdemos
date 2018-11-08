@@ -20,3 +20,13 @@
 #   TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 #   PARTICULAR PURPOSE.
 #============================================================================*/
+
+# Execute in dockerfile directory
+
+docker build –t newsqlserverimage .
+
+docker images
+
+docker run –d –p 1433:1433 --name newsqlservercontainer newsqlserverimage
+
+

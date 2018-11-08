@@ -55,15 +55,18 @@ SELECT @@Version
 docker container ls 
 
 # Examine Container
-docker inspect sqlcontainer
+docker inspect sqldemoserver
 
 # Connect to container
-docker exec –it sqlcontainer bash
+docker exec –it sqldemoserver bash
 
 # Copy file to container
-docker cp C:\Temp\Docker\sqlserver\WideWorldImporters-Full.bak sqlcontainer:/var/opt/mssql/data/WideWorldImporters-Full.bak
+docker cp C:\Temp\Docker\sqlserver\WideWorldImporters-Full.bak sqldemoserver:/var/opt/mssql/data/WideWorldImporters-Full.bak
 
 # Restore Database via SSMS
+
+# Convert Docker Container to Image
+docker commit sqldemoserver frankgeisler/passsummitsqltest
 
 # Remove Container
 docker rm -f sqldemoserver
