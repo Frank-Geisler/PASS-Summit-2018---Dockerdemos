@@ -41,7 +41,7 @@ docker search microsoft/mssql
 docker pull microsoft/mssql-server-linux
 
 # Check Docker Images
-docker images ls
+docker image ls
 
 # Run SQL Server Container
 docker run --name sqldemoserver -p 1433:1433 -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=!test123" -d microsoft/mssql-server-linux:latest
@@ -58,7 +58,7 @@ docker container ls
 docker inspect sqldemoserver
 
 # Connect to container
-docker exec –it sqldemoserver bash
+docker container exec -it sqldemoserver bin/bash
 
 # Copy file to container
 docker cp C:\Temp\Docker\sqlserver\WideWorldImporters-Full.bak sqldemoserver:/var/opt/mssql/data/WideWorldImporters-Full.bak
