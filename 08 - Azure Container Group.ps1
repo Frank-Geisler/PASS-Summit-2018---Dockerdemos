@@ -31,17 +31,6 @@ $name = "sql01"
 $location = "westus"
 $envVars = @{ACCEPT_EULA="Y";SA_PASSWORD="!demo54321"}
 
-<#
-
-docker run --name sqlserverdocker -p 1433:1433 -d  frankgeisler/mssql-server-linux-adventureworks2017
-
-#>
-
-
-#-Image microsoft/mssql-server-windows-developer `
-#-Image frankgeisler/mssql-server-linux-adventureworks2017
-#-Image microsoft/iis:nanoserver `
-
 New-AzureRmContainerGroup -ResourceGroupName $resourceGroup `
                             -Name $name `
                             -Image frankgeisler/mssql-server-linux-adventureworks2017 `
